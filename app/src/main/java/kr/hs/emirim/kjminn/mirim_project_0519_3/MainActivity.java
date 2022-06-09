@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.Chronometer;
 import android.widget.DatePicker;
+import android.widget.FrameLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -22,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     DatePicker date;
     TextView textResult;
     int selectedYear, selectedMonth, selectedDay;
-
+    FrameLayout frame;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         time = findViewById(R.id.time);
         date = findViewById(R.id.date);
         textResult = findViewById(R.id.text_result);
+        frame = findViewById(R.id.frame);
         rg.setOnCheckedChangeListener(rgListener);
         timer.setOnClickListener(timerListener);
         textResult.setOnLongClickListener(textListener);
@@ -43,12 +45,13 @@ public class MainActivity extends AppCompatActivity {
                 selectedDay = day;
             }
         });
-        time.setVisibility(View.INVISIBLE);
-        date.setVisibility(View.INVISIBLE);
+        rg.setVisibility(View.INVISIBLE);
+        frame.setVisibility(View.INVISIBLE);
     }
     RadioGroup.OnCheckedChangeListener rgListener = new RadioGroup.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+            frame.setVisibility(View.VISIBLE);
             time.setVisibility(View.INVISIBLE);
             date.setVisibility(View.INVISIBLE);
             switch (checkedId){
@@ -65,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
     View.OnClickListener timerListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            rg.setVisibility(View.VISIBLE);
             timer.setBase(SystemClock.elapsedRealtime());
             timer.start();
             timer.setTextColor(Color.RED);
@@ -78,6 +82,8 @@ public class MainActivity extends AppCompatActivity {
             timer.setTextColor(Color.BLUE);
             textResult.setText(selectedYear + "년 " + selectedMonth + "월 " + selectedDay + "일 ");
             textResult.append(time.getCurrentHour() + "시 " + time.getCurrentMinute() + "분 예약 완료됨");
+            frame.setVisibility(View.INVISIBLE);
+            rg.setVisibility(View.INVISIBLE);
             return true;
         }
     };
